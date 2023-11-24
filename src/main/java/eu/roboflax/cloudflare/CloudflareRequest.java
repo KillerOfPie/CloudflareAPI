@@ -12,7 +12,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import eu.roboflax.cloudflare.constants.Category;
+import eu.roboflax.cloudflare.constants.interfaces.ConstantCategory;
 import eu.roboflax.cloudflare.http.HttpMethod;
 import io.joshworks.restclient.http.HttpResponse;
 import lombok.Getter;
@@ -98,11 +98,11 @@ public class CloudflareRequest {
         httpMethod( httpMethod ).additionalPath( additionalPath ).cloudflareAccess( cloudflareAccess );
     }
     
-    public CloudflareRequest( Category category, CloudflareAccess cloudflareAccess ) {
+    public CloudflareRequest(ConstantCategory category, CloudflareAccess cloudflareAccess ) {
         category( category ).cloudflareAccess( cloudflareAccess );
     }
     
-    public CloudflareRequest( Category category ) {
+    public CloudflareRequest( ConstantCategory category ) {
         category( category );
     }
     
@@ -138,17 +138,17 @@ public class CloudflareRequest {
         return new CloudflareRequest( httpMethod, additionalPath, cloudflareAccess );
     }
     
-    public static CloudflareRequest newRequest( Category category ) {
+    public static CloudflareRequest newRequest( ConstantCategory category ) {
         return new CloudflareRequest( category );
     }
     
-    public static CloudflareRequest newRequest( Category category, CloudflareAccess cloudflareAccess ) {
+    public static CloudflareRequest newRequest( ConstantCategory category, CloudflareAccess cloudflareAccess ) {
         return new CloudflareRequest( category, cloudflareAccess );
     }
     
     /**
      * Sets the additional path which will be appended on {@link eu.roboflax.cloudflare.CloudflareAccess#API_BASE_URL}.
-     * Not usable when {@link eu.roboflax.cloudflare.constants.Category} was given.
+     * Not usable when {@link eu.roboflax.cloudflare.constants.interfaces.ConstantCategory} was given.
      *
      * @param additionalPath
      * @return
@@ -163,7 +163,7 @@ public class CloudflareRequest {
         return this;
     }
     
-    public CloudflareRequest category( Category category ) {
+    public CloudflareRequest category( ConstantCategory category ) {
         checkNotNull( category );
         httpMethod( category.getHttpMethod() ).additionalPath( category.getAdditionalPath() );
         return this;

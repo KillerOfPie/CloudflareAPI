@@ -5,6 +5,7 @@
 package eu.roboflax.cloudflare.constants;
 
 import eu.roboflax.cloudflare.CloudflareAccess;
+import eu.roboflax.cloudflare.constants.interfaces.ConstantCategory;
 import eu.roboflax.cloudflare.http.HttpMethod;
 
 import static eu.roboflax.cloudflare.http.HttpMethod.*;
@@ -13,7 +14,7 @@ import static eu.roboflax.cloudflare.http.HttpMethod.*;
  * Every request that can be made on api.cloudflare.com.
  * @version March 1st, 2018
  */
-public enum Category {
+public enum Category implements ConstantCategory {
     
     // User (The currently logged in/authenticated User)
     USER_DETAILS( GET, "user" ),
