@@ -42,6 +42,7 @@ public class CloudflareRequest {
     private HttpMethod httpMethod;
     private String additionalPath;
     private List<String> orderedIdentifiers = Lists.newArrayList();
+    private Map<String, String> targetedIdentifiers = Maps.newHashMap();
     private Map<String, Object> queryStrings = Maps.newHashMap();
     private JsonObject body = new JsonObject();
     
@@ -179,6 +180,18 @@ public class CloudflareRequest {
         if ( Lists.newArrayList( orderedIdentifiers ).contains( null ) )
             throw new NullPointerException( ERROR_INVALID_IDENTIFIER );
         Collections.addAll( this.orderedIdentifiers, orderedIdentifiers );
+        return this;
+    }
+
+    public CloudflareRequest targettedIdentifiers( String... identifierRelationships ) {
+        checkNotNull( identifierRelationships, ERROR_INVALID_IDENTIFIER );
+        if ( Lists.newArrayList( identifierRelationships ).contains( null ) )
+            throw new NullPointerException( ERROR_INVALID_IDENTIFIER );
+
+        for(int i = 0; i < identifierRelationships.length; i += 2) {
+            targetedIdentifiers.put(identifierRelationships[i], identifierRelationships[i + 1]);
+        }
+
         return this;
     }
     
@@ -733,6 +746,10 @@ public class CloudflareRequest {
         // pattern is like 'foo/{id-1}/bar/{id-2}'
         for ( int place = 1; place <= orderedIdentifiers.size(); place++ )
             additionalCategoryPath = additionalCategoryPath.replace( "{id-" + place + "}", orderedIdentifiers.get( place - 1 ) );
+
+        for(Map.Entry<String, String> entry : targetedIdentifiers.entrySet()) {
+            additionalCategoryPath = additionalCategoryPath.replace( "{" + entry.getKey() + "}", entry.getValue() );
+        }
         
         return additionalCategoryPath;
     }
