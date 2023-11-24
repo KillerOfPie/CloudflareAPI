@@ -12,7 +12,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import eu.roboflax.cloudflare.constants.Identifier;
 import eu.roboflax.cloudflare.constants.interfaces.ConstantCategory;
 import eu.roboflax.cloudflare.constants.interfaces.ConstantIdentifier;
 import eu.roboflax.cloudflare.http.HttpMethod;
@@ -64,7 +63,7 @@ public class CloudflareRequest {
     
     /**
      * The http request still was successful. If you used a CloudflareCallback for this request then onFailure will be executed.
-     * Otherwise if you have a CloudflareResponse object you can still use .getJson() to retrieve further information.
+     * Otherwise, if you have a CloudflareResponse object you can still use .getJson() to retrieve further information.
      */
     public static final String ERROR_CLOUDFLARE_FAILURE = "Cloudflare was unable to perform your request and couldn't determine the result of the requested/passed information. " +
             "Maybe you built the request wrong or something different.";
@@ -224,7 +223,7 @@ public class CloudflareRequest {
     }
     
     public CloudflareRequest body( String wholeBody ) {
-        body( new JsonParser().parse( checkNotNull( wholeBody ) ) );
+        body(JsonParser.parseString(checkNotNull(wholeBody)));
         return this;
     }
     
@@ -297,7 +296,7 @@ public class CloudflareRequest {
     private Pair<HttpResponse<String>, JsonObject> response( ) {
         if ( response == null ) {
             HttpResponse<String> httpResponse = sendRequest();
-            JsonElement parsed = new JsonParser().parse( httpResponse.getBody() );
+            JsonElement parsed = JsonParser.parseString(httpResponse.body());
             // Check if parsing was successful, gson returns json null if failed
             if ( parsed.isJsonNull() )
                 throw new IllegalStateException( ERROR_PARSING_JSON );
@@ -645,7 +644,7 @@ public class CloudflareRequest {
     /**
      * INTERNAL HELPER METHOD!
      *
-     * @param callback    user'S callback
+     * @param callback    user's callback
      * @param getResponse .call() is returning the CloudflareResponse<T>
      * @param <T>         type of "object" in CloudflareResponse
      */
