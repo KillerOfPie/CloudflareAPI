@@ -1,6 +1,7 @@
 package eu.roboflax.cloudflare.constants;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public enum Identifier {
     ACCOUNT("account_identifier"),
@@ -10,7 +11,8 @@ public enum Identifier {
     private final String identifier;
 
     @Getter
-    private String replacement;
+    @Setter
+    private String replacement = "";
 
     Identifier(String identifier) {
         this.identifier = identifier;
