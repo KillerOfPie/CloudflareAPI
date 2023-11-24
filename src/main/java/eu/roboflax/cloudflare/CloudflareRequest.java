@@ -12,7 +12,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import eu.roboflax.cloudflare.constants.Identifier;
 import eu.roboflax.cloudflare.constants.interfaces.ConstantCategory;
+import eu.roboflax.cloudflare.constants.interfaces.ConstantIdentifier;
 import eu.roboflax.cloudflare.http.HttpMethod;
 import io.joshworks.restclient.http.HttpResponse;
 import lombok.Getter;
@@ -42,7 +44,7 @@ public class CloudflareRequest {
     private HttpMethod httpMethod;
     private String additionalPath;
     private List<String> orderedIdentifiers = Lists.newArrayList();
-    private Map<String, String> targetedIdentifiers = Maps.newHashMap();
+    private List<ConstantIdentifier> targetedIdentifiers = Lists.newArrayList();
     private Map<String, Object> queryStrings = Maps.newHashMap();
     private JsonObject body = new JsonObject();
     
@@ -183,15 +185,11 @@ public class CloudflareRequest {
         return this;
     }
 
-    public CloudflareRequest targettedIdentifiers( String... identifierRelationships ) {
-        checkNotNull( identifierRelationships, ERROR_INVALID_IDENTIFIER );
-        if ( Lists.newArrayList( identifierRelationships ).contains( null ) )
+    public CloudflareRequest targetedIdentifiers( ConstantIdentifier... targetedIdentifiers ) {
+        checkNotNull( targetedIdentifiers, ERROR_INVALID_IDENTIFIER );
+        if ( Lists.newArrayList( targetedIdentifiers ).contains( null ) )
             throw new NullPointerException( ERROR_INVALID_IDENTIFIER );
-
-        for(int i = 0; i < identifierRelationships.length; i += 2) {
-            targetedIdentifiers.put(identifierRelationships[i], identifierRelationships[i + 1]);
-        }
-
+        Collections.addAll(this.targetedIdentifiers, targetedIdentifiers);
         return this;
     }
     
