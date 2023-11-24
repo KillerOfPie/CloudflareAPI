@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.roboflax.cloudflare</groupId>
     <artifactId>cloudflare-java</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <packaging>jar</packaging>
     <name>Cloudflare - API/Library</name>
     <description>A Java Cloudflare API/Library.</description>
@@ -26,6 +26,13 @@
             <roles>
                 <role>owner</role>
                 <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>KillerOfPie</name>
+            <email>dev@pastrymaker-studios.com</email>
+            <roles>
+                <role>contributor</role>
             </roles>
         </developer>
     </developers>
