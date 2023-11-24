@@ -1,9 +1,10 @@
 package eu.roboflax.cloudflare.constants.Categories;
 
 import eu.roboflax.cloudflare.CloudflareAccess;
+import eu.roboflax.cloudflare.constants.interfaces.ConstantCategory;
 import eu.roboflax.cloudflare.http.HttpMethod;
 
-public enum CFTunnelCategory {
+public enum CFTunnelCategory implements ConstantCategory {
 
     //Tunnel
     LIST_TUNNELS( HttpMethod.GET, "zones/{id-1}/cfd_tunnel" ),
