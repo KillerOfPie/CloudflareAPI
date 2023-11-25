@@ -745,7 +745,7 @@ public class CloudflareRequest {
             additionalCategoryPath = additionalCategoryPath.replace( "{id-" + place + "}", orderedIdentifiers.get( place - 1 ) );
 
         for(ConstantIdentifier identifier : targetedIdentifiers) {
-            additionalCategoryPath = additionalCategoryPath.replace( "{" + identifier.getIdentifier() + "}", identifier.getReplacement());
+            additionalCategoryPath = additionalCategoryPath.replace( identifier.getIdentifier(), identifier.getReplacement());
         }
         
         return additionalCategoryPath;
