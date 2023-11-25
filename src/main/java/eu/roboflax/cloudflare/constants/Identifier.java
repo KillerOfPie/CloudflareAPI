@@ -1,9 +1,10 @@
 package eu.roboflax.cloudflare.constants;
 
+import eu.roboflax.cloudflare.constants.interfaces.ConstantIdentifier;
 import lombok.Getter;
 import lombok.Setter;
 
-public enum Identifier {
+public enum Identifier implements ConstantIdentifier {
     ACCOUNT("account_identifier"),
     TUNNEL_ID("tunnel_id"),
     CONNECTOR_ID("connector_id");
