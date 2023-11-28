@@ -13,8 +13,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import eu.roboflax.cloudflare.constants.interfaces.ConstantCategory;
-import eu.roboflax.cloudflare.constants.interfaces.ConstantIdentifier;
 import eu.roboflax.cloudflare.http.HttpMethod;
+import eu.roboflax.cloudflare.variables.VariableInjector;
 import io.joshworks.restclient.http.HttpResponse;
 import lombok.Getter;
 import org.apache.commons.lang3.tuple.Pair;
@@ -43,7 +43,7 @@ public class CloudflareRequest {
     private HttpMethod httpMethod;
     private String additionalPath;
     private List<String> orderedIdentifiers = Lists.newArrayList();
-    private List<ConstantIdentifier> targetedIdentifiers = Lists.newArrayList();
+    private List<VariableInjector> targetedIdentifiers = Lists.newArrayList();
     private Map<String, Object> queryStrings = Maps.newHashMap();
     private JsonObject body = new JsonObject();
     
@@ -184,10 +184,9 @@ public class CloudflareRequest {
         return this;
     }
 
-    public CloudflareRequest targetedIdentifiers( ConstantIdentifier... targetedIdentifiers ) {
-        checkNotNull( targetedIdentifiers, ERROR_INVALID_IDENTIFIER );
-        if ( Lists.newArrayList( targetedIdentifiers ).contains( null ) )
-            throw new NullPointerException( ERROR_INVALID_IDENTIFIER );
+    public CloudflareRequest targetedIdentifiers( VariableInjector... targetedIdentifiers ) {
+        if (targetedIdentifiers == null || Lists.newArrayList(targetedIdentifiers).contains(null) )
+            throw new NullPointerException(ERROR_INVALID_IDENTIFIER);
         Collections.addAll(this.targetedIdentifiers, targetedIdentifiers);
         return this;
     }
@@ -735,18 +734,20 @@ public class CloudflareRequest {
     /**
      * INTERNAL HELPER METHOD!
      *
-     * @return formatted url containing the passed ordered identifiers replaced with {id-ORDER_NUMBER}
+     * @return formatted url containing the passed ordered identifiers replaced with {id-ORDER_NUMBER} or TargetedIdentifiers replacing {KEY}
      */
     private String categoryPath( ) {
-        String additionalCategoryPath = checkNotNull( additionalPath, ERROR_INVALID_ADDITIONAL_PATH );
+        String additionalCategoryPath = checkNotNull(additionalPath, ERROR_INVALID_ADDITIONAL_PATH);
         
         // pattern is like 'foo/{id-1}/bar/{id-2}'
         for ( int place = 1; place <= orderedIdentifiers.size(); place++ )
             additionalCategoryPath = additionalCategoryPath.replace( "{id-" + place + "}", orderedIdentifiers.get( place - 1 ) );
 
-        for(ConstantIdentifier identifier : targetedIdentifiers) {
-            additionalCategoryPath = additionalCategoryPath.replace( identifier.getIdentifier(), identifier.getReplacement());
+        // pattern like 'foo/{KEY}/bar/{2NDKEY}'
+        for(VariableInjector injector : targetedIdentifiers) {
+            additionalCategoryPath = additionalCategoryPath.replace(injector.getIdentifier(), injector.getReplacement());
         }
+        Thread.dumpStack();
         
         return additionalCategoryPath;
     }
@@ -759,9 +760,9 @@ public class CloudflareRequest {
      * @param additionalPath
      * @return validated additional path
      */
-    private static String validAdditionalPath( String additionalPath ) {
-        if ( additionalPath.startsWith( "/" ) )
-            additionalPath = additionalPath.substring( 1 );
+    private static String validAdditionalPath(String additionalPath) {
+        if (additionalPath.startsWith("/"))
+            additionalPath = additionalPath.substring(1);
         return additionalPath;
     }
 }
